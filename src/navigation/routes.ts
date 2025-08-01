@@ -8,7 +8,7 @@ const ROUTES = {
   CAMPEONATO_INTERNO: 'CampeonatoInterno',
   CAMPEONATO_RESUMO: 'CampeonatoResumo',
   CAMPEONATO_CARD: 'CampeonatoCard',
-
+  ANDAMENTO_JOGO: 'AndamentoJogoScreen',
   // Equipes
   EQUIPES: 'EquipesScreen',
   EQUIPE_CADASTRO: 'EquipeCadastro',
@@ -23,10 +23,13 @@ const ROUTES = {
   GRUPOS_CONFIG: 'GruposConfigScreen',
   ELIMINATORIA_CONFIG: 'EliminatoriaConfigScreen',
   FASE_DETALHES: 'FaseDetalhesScreen',
+  ELIMINATORIA_JOGOS: 'EliminatoriaJogos',
+
 
   // Jogos
   JOGOS: 'RodadasJogosScreen', // OU mantenha apenas este
   JOGO_CADASTRO: 'JogoCadastroScreen',
+  JOGO_ANDAMENTO: 'AndamentoJogoScreen',
 
   // Estatísticas
   ESTATISTICAS: 'EstatisticasScreen',
@@ -34,5 +37,6 @@ const ROUTES = {
   // Configurações
   CONFIGURACOES: 'ConfiguracoesScreen',
 };
+
 
 export default ROUTES;

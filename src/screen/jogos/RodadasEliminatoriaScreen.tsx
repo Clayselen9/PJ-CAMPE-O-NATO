@@ -22,7 +22,7 @@ interface Equipe {
 
 interface Jogo {
   id: string;
-  rodada: number;
+  rodada: number; // Usaremos para determinar qual fase da eliminatória é (1 = Oitavas, etc)
   faseId: string;
   local: string;
   data: string;
@@ -34,12 +34,15 @@ interface Jogo {
   status: string; // "ENCERRADO", "AGENDADO"
 }
 
-export default function RodadasJogosScreen() {
+const nomesRodadas = ['Oitavas', 'Quartas', 'Semi', 'Final'];
+
+export default function RodadasEliminatoriaScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute();
   const { faseId } = route.params as { faseId: string };
 
-  const [rodadas, setRodadas] = useState<number[]>([1]);
+  // Rodadas fixas para eliminatórias, até 4 fases
+  const [rodadas] = useState<number[]>([1, 2, 3, 4]);
   const [rodadaSelecionada, setRodadaSelecionada] = useState<number>(1);
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [equipes, setEquipes] = useState<Equipe[]>([]);
@@ -62,12 +65,6 @@ export default function RodadasJogosScreen() {
       (j) => j.faseId === faseId && j.rodada === rodadaSelecionada
     );
     setJogos(filtrados);
-  };
-
-  const adicionarRodada = () => {
-    const novaRodada = rodadas.length + 1;
-    setRodadas([...rodadas, novaRodada]);
-    setRodadaSelecionada(novaRodada);
   };
 
   const abrirCadastroJogo = () => {
@@ -99,11 +96,6 @@ export default function RodadasJogosScreen() {
     navigation.navigate(ROUTES.JOGO_CADASTRO, { jogoId: id, faseId, rodada: rodadaSelecionada });
   };
 
-  // NOVA FUNÇÃO: Navegar para tela de andamento do jogo
-  const iniciarJogo = (jogo: Jogo) => {
-    navigation.navigate(ROUTES.JOGO_ANDAMENTO, { jogoId: jogo.id });
-  };
-
   const renderItem = ({ item }: { item: Jogo }) => (
     <View style={styles.cardJogo}>
       <Text style={styles.local}>
@@ -125,14 +117,6 @@ export default function RodadasJogosScreen() {
       <Text style={styles.status}>{item.status}</Text>
 
       <View style={styles.buttonsRow}>
-        <TouchableOpacity
-          style={[styles.button, styles.iniciarButton]}
-          onPress={() => iniciarJogo(item)}
-        >
-          <Ionicons name="play" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Iniciar</Text>
-        </TouchableOpacity>
-
         <TouchableOpacity
           style={[styles.button, styles.editButton]}
           onPress={() => editarJogo(item.id)}
@@ -156,7 +140,7 @@ export default function RodadasJogosScreen() {
     <View style={styles.container}>
       {/* TOPO */}
       <View style={styles.header}>
-        <Text style={styles.titulo}>Rodadas & Jogos</Text>
+        <Text style={styles.titulo}>Eliminatórias - {nomesRodadas[rodadaSelecionada - 1]}</Text>
       </View>
 
       {/* Tabs de Rodadas */}
@@ -167,12 +151,9 @@ export default function RodadasJogosScreen() {
             style={[styles.tab, rodadaSelecionada === r && styles.tabAtiva]}
             onPress={() => setRodadaSelecionada(r)}
           >
-            <Text style={styles.tabTexto}>{r}ª Rodada</Text>
+            <Text style={styles.tabTexto}>{nomesRodadas[r - 1]}</Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.botaoMais} onPress={adicionarRodada}>
-          <Ionicons name="add-circle" size={28} color="#2980b9" />
-        </TouchableOpacity>
       </View>
 
       {/* Lista de Jogos */}
@@ -201,7 +182,6 @@ const styles = StyleSheet.create({
   tab: { padding: 8, marginRight: 6, borderBottomWidth: 2, borderColor: 'transparent' },
   tabAtiva: { borderColor: '#2980b9' },
   tabTexto: { fontSize: 14, fontWeight: 'bold' },
-  botaoMais: { marginLeft: 6 },
   cardJogo: {
     backgroundColor: '#ecf0f1',
     padding: 12,
@@ -223,9 +203,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,
-  },
-  iniciarButton: {
-    backgroundColor: '#27ae60',
   },
   editButton: { backgroundColor: '#2980b9' },
   deleteButton: { backgroundColor: '#c0392b' },

@@ -21,7 +21,12 @@ interface Fase {
 interface Jogo {
   id: string;
   faseId: string;
-  status: string; // AGENDADO ou ENCERRADO
+  status: string;
+}
+
+interface Rodada {
+  id: string;
+  faseId: string;
 }
 
 export default function FaseDetalhesScreen() {
@@ -34,6 +39,7 @@ export default function FaseDetalhesScreen() {
 
   const [fase, setFase] = useState<Fase | null>(null);
   const [totalJogos, setTotalJogos] = useState<number>(0);
+  const [rodadas, setRodadas] = useState<Rodada[]>([]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -57,6 +63,11 @@ export default function FaseDetalhesScreen() {
       const listaJogos: Jogo[] = dadosJogos ? JSON.parse(dadosJogos) : [];
       const jogosFase = listaJogos.filter((j) => j.faseId === faseId);
       setTotalJogos(jogosFase.length);
+
+      const dadosRodadas = await AsyncStorage.getItem('rodadas');
+      const listaRodadas: Rodada[] = dadosRodadas ? JSON.parse(dadosRodadas) : [];
+      const rodadasDaFase = listaRodadas.filter((r) => r.faseId === faseId);
+      setRodadas(rodadasDaFase);
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar os dados da fase.');
     }
@@ -71,17 +82,33 @@ export default function FaseDetalhesScreen() {
   };
 
   const abrirGrupos = () => {
-    navigation.navigate('GruposConfigScreen', {
+    navigation.navigate(ROUTES.GRUPOS_CONFIG, {
       campeonatoId,
       faseId,
     });
   };
 
-  const abrirRodadasJogos = () => {
-    navigation.navigate(ROUTES.RODADAS_JOGOS, {
-      campeonatoId,
-      faseId,
-    });
+ const abrirRodadasJogos = () => {
+  if (fase?.tipo === 'eliminatoria') {
+    navigation.navigate(ROUTES.ELIMINATORIA_JOGOS, { campeonatoId, faseId });
+  } else {
+    navigation.navigate(ROUTES.JOGOS, { campeonatoId, faseId });
+  }
+};
+
+  const nomesEliminatorias = [
+    'Oitavas de Final',
+    'Quartas de Final',
+    'Semifinal',
+    'Final',
+  ];
+
+  const nomeDaRodada = (index: number) => {
+    if (fase?.tipo === 'eliminatoria') {
+      return nomesEliminatorias[nomesEliminatorias.length - rodadas.length + index] || `Rodada ${index + 1}`;
+    } else {
+      return `Rodada ${index + 1}`;
+    }
   };
 
   if (!fase) {
@@ -124,6 +151,24 @@ export default function FaseDetalhesScreen() {
       <TouchableOpacity style={styles.botaoVerde} onPress={abrirRodadasJogos}>
         <Text style={styles.botaoTexto}>📅 Rodadas & Jogos</Text>
       </TouchableOpacity>
+
+      <View style={{ marginTop: 24 }}>
+        {rodadas.map((rodada, index) => (
+          <TouchableOpacity
+            key={rodada.id}
+            style={styles.rodadaItem}
+            onPress={() =>
+              navigation.navigate(ROUTES.JOGOS, {
+                campeonatoId,
+                faseId,
+                rodadaId: rodada.id,
+              })
+            }
+          >
+            <Text style={styles.rodadaTexto}>{nomeDaRodada(index)}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </ScrollView>
   );
 }
@@ -156,4 +201,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   botaoTexto: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  rodadaItem: {
+    backgroundColor: '#bdc3c7',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  rodadaTexto: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+  },
 });

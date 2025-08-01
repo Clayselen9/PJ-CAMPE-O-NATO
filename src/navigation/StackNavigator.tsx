@@ -27,7 +27,9 @@ import FaseDetalhesScreen from '../screen/fases/FaseDetalhesScreen';
 
 // Jogos
 import RodadasJogosScreen from '../screen/jogos/RodadasJogosScreen';
+import RodadasEliminatoriaScreen from '../screen/jogos/RodadasEliminatoriaScreen';
 import JogoCadastroScreen from '../screen/jogos/JogoCadastroScreen';
+import AndamentoJogoScreen from '../screen/jogos/AndamentoJogoScreen';
 
 // Estatísticas e Configurações
 import EstatisticasScreen from '../screen/estatisticas/EstatisticasScreen';
@@ -40,6 +42,7 @@ const Stack = createNativeStackNavigator();
 export default function StackNavigator() {
   return (
     <Stack.Navigator initialRouteName={ROUTES.HOME}>
+      {/* Home */}
       <Stack.Screen name={ROUTES.HOME} component={HomeScreen} />
 
       {/* Campeonato */}
@@ -62,11 +65,13 @@ export default function StackNavigator() {
       <Stack.Screen name={ROUTES.CONFIGURAR_FASE} component={ConfigurarFaseScreen} />
       <Stack.Screen name={ROUTES.GRUPOS_CONFIG} component={GruposConfigScreen} />
       <Stack.Screen name={ROUTES.ELIMINATORIA_CONFIG} component={EliminatoriaConfigScreen} />
-      <Stack.Screen name={ROUTES.FASE_DETALHES} component={ FaseDetalhesScreen } />
+      <Stack.Screen name={ROUTES.FASE_DETALHES} component={FaseDetalhesScreen} />
 
       {/* Jogos */}
       <Stack.Screen name={ROUTES.JOGOS} component={RodadasJogosScreen} />
+      <Stack.Screen name={ROUTES.ELIMINATORIA_JOGOS} component={RodadasEliminatoriaScreen} />
       <Stack.Screen name={ROUTES.JOGO_CADASTRO} component={JogoCadastroScreen} />
+      <Stack.Screen name={ROUTES.ANDAMENTO_JOGO} component={AndamentoJogoScreen} />
 
       {/* Estatísticas */}
       <Stack.Screen name={ROUTES.ESTATISTICAS} component={EstatisticasScreen} />
