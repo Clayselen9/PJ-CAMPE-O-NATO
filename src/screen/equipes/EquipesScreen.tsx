@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 40,
   },
   textoBotao: {
     color: '#fff',
@@ -106,10 +107,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   escudo: {
-    width: 40,
-    height: 40,
+    width: 70,
+    height: 70,
     marginRight: 12,
-    borderRadius: 20,
+    borderRadius: 10,
     backgroundColor: '#ddd',
   },
   escudoVazio: {

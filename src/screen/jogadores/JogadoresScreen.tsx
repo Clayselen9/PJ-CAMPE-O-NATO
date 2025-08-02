@@ -117,7 +117,7 @@ export default function JogadoresScreen() {
         style={styles.botao}
         onPress={() => navigation.navigate('JogadorCadastro', { equipeId })}
       >
-        <Text style={styles.botaoTexto}>➕ Adicionar Jogador</Text>
+        <Text style={styles.botaoTexto}> + Adicionar Jogador</Text>
       </TouchableOpacity>
     </View>
   );
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   fotoMiniatura: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 10,
     marginRight: 12,
   },
   nome: { fontSize: 16, fontWeight: 'bold' },
@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 40,
+    marginBottom: 30,
   },
   botaoTexto: {
     color: '#fff',

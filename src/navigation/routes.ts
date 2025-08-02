@@ -30,7 +30,6 @@ const ROUTES = {
   JOGOS: 'RodadasJogosScreen', // OU mantenha apenas este
   JOGO_CADASTRO: 'JogoCadastroScreen',
   JOGO_ANDAMENTO: 'AndamentoJogoScreen',
-
   // Estatísticas
   ESTATISTICAS: 'EstatisticasScreen',
 

@@ -207,11 +207,12 @@ const styles = StyleSheet.create({
   progressText: { fontSize: 12, color: "#666" },
   semDados: { textAlign: "center", color: "#999", marginTop: 20 },
   botao: {
-    backgroundColor: "#8e44ad",
+    backgroundColor: "#598404ff",
     padding: 14,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
+    marginBottom: 40,
   },
   textoBotao: { color: "#fff", fontWeight: "bold", fontSize: 16 },
   modalOverlay: {

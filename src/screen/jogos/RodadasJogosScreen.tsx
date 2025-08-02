@@ -39,15 +39,27 @@ export default function RodadasJogosScreen() {
   const route = useRoute();
   const { faseId } = route.params as { faseId: string };
 
-  const [rodadas, setRodadas] = useState<number[]>([1]);
+  const [rodadas, setRodadas] = useState<number[]>([]);
   const [rodadaSelecionada, setRodadaSelecionada] = useState<number>(1);
   const [jogos, setJogos] = useState<Jogo[]>([]);
   const [equipes, setEquipes] = useState<Equipe[]>([]);
 
   useEffect(() => {
-    carregarEquipes();
-    carregarJogos();
-  }, [rodadaSelecionada]);
+  carregarEquipes();
+  carregarJogos();
+  carregarRodadas(); // novo
+}, [rodadaSelecionada]);
+
+const carregarRodadas = async () => {
+  const dados = await AsyncStorage.getItem(`rodadas_${faseId}`);
+  if (dados) {
+    setRodadas(JSON.parse(dados));
+  } else {
+    setRodadas([1]); // valor padrão
+    await AsyncStorage.setItem(`rodadas_${faseId}`, JSON.stringify([1]));
+  }
+};
+
 
   const carregarEquipes = async () => {
     const dados = await AsyncStorage.getItem('equipes');
@@ -64,11 +76,14 @@ export default function RodadasJogosScreen() {
     setJogos(filtrados);
   };
 
-  const adicionarRodada = () => {
-    const novaRodada = rodadas.length + 1;
-    setRodadas([...rodadas, novaRodada]);
-    setRodadaSelecionada(novaRodada);
-  };
+  const adicionarRodada = async () => {
+  const novaRodada = rodadas.length + 1;
+  const novasRodadas = [...rodadas, novaRodada];
+  setRodadas(novasRodadas);
+  setRodadaSelecionada(novaRodada);
+  await AsyncStorage.setItem(`rodadas_${faseId}`, JSON.stringify(novasRodadas));
+};
+
 
   const abrirCadastroJogo = () => {
     navigation.navigate(ROUTES.JOGO_CADASTRO, { faseId, rodada: rodadaSelecionada });
@@ -130,7 +145,7 @@ export default function RodadasJogosScreen() {
           onPress={() => iniciarJogo(item)}
         >
           <Ionicons name="play" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Iniciar</Text>
+          <Text style={styles.buttonText}>ENTRAR</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -236,10 +251,11 @@ const styles = StyleSheet.create({
   },
   botaoAdicionar: {
     backgroundColor: '#27ae60',
-    padding: 14,
+    padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 10,
+    marginBottom: 40,
   },
   textoBotao: { color: '#fff', fontWeight: 'bold' },
 });

@@ -121,7 +121,7 @@ export default function FaseDetalhesScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Detalhes da Fase</Text>
+      <Text style={styles.title}> Gerar / Gerenciar / alterar </Text>
 
       <View style={styles.card}>
         <Text style={styles.label}>Nome:</Text>
@@ -138,18 +138,21 @@ export default function FaseDetalhesScreen() {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.botaoAzul} onPress={abrirConfiguracoes}>
-        <Text style={styles.botaoTexto}>⚙ Configurações</Text>
-      </TouchableOpacity>
+
+      
 
       {fase.tipo === 'grupos' && (
         <TouchableOpacity style={styles.botaoLaranja} onPress={abrirGrupos}>
-          <Text style={styles.botaoTexto}>👥 Configurar Grupos</Text>
+          <Text style={styles.botaoTexto}>👥  Grupos</Text>
         </TouchableOpacity>
       )}
 
       <TouchableOpacity style={styles.botaoVerde} onPress={abrirRodadasJogos}>
-        <Text style={styles.botaoTexto}>📅 Rodadas & Jogos</Text>
+        <Text style={styles.botaoTexto}>📅   Rodadas / Jogos</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.botaoAzul} onPress={abrirConfiguracoes}>
+        <Text style={styles.botaoTexto}>⚙  Configurações</Text>
       </TouchableOpacity>
 
       <View style={{ marginTop: 24 }}>
@@ -179,23 +182,26 @@ const styles = StyleSheet.create({
   card: { backgroundColor: '#ecf0f1', padding: 16, borderRadius: 8, marginBottom: 20 },
   label: { fontSize: 14, color: '#555', marginTop: 8 },
   value: { fontSize: 16, fontWeight: 'bold' },
+
   botaoAzul: {
     backgroundColor: '#2980b9',
-    padding: 14,
+    padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 12,
+    marginTop: -5,
   },
   botaoVerde: {
     backgroundColor: '#27ae60',
-    padding: 14,
+    padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: -5,
+    marginBottom: 12,
   },
   botaoLaranja: {
     backgroundColor: '#e67e22',
-    padding: 14,
+    padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 12,

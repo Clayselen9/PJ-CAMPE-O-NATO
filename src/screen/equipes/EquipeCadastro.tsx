@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 import Papa from 'papaparse';
 
 export default function EquipeCadastro() {
@@ -110,8 +111,12 @@ export default function EquipeCadastro() {
 
       if (result.canceled || !result.assets?.[0]?.uri) return;
 
-      const response = await fetch(result.assets[0].uri);
-      const texto = await response.text();
+      const fileUri = result.assets[0].uri;
+
+      // Leitura via expo-file-system
+      const texto = await FileSystem.readAsStringAsync(fileUri, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
 
       const { data } = Papa.parse(texto, {
         header: true,
@@ -137,6 +142,7 @@ export default function EquipeCadastro() {
 
       Alert.alert('Importação concluída', 'Jogadores importados com sucesso!');
     } catch (error) {
+      console.error(error);
       Alert.alert('Erro', 'Erro ao importar jogadores');
     }
   };
@@ -152,7 +158,7 @@ export default function EquipeCadastro() {
         style={styles.botaoCinza}
         onPress={() => setMostrarConfiguracoes(!mostrarConfiguracoes)}
       >
-        <Text style={styles.botaoTexto}>Configurações da Equipe</Text>
+        <Text style={styles.botaoTexto}>informações da Equipe</Text>
       </TouchableOpacity>
 
       {mostrarConfiguracoes && (
@@ -169,12 +175,6 @@ export default function EquipeCadastro() {
             value={tecnico}
             onChangeText={setTecnico}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Comissão Técnica"
-            value={comissao}
-            onChangeText={setComissao}
-          />
           <TouchableOpacity style={styles.imagemArea} onPress={selecionarImagem}>
             {escudo ? (
               <Image source={{ uri: escudo }} style={styles.imagem} />
@@ -182,26 +182,22 @@ export default function EquipeCadastro() {
               <Text style={styles.imagemTexto}>Selecionar Escudo</Text>
             )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.botaoExcluir} onPress={excluirEquipe}>
-            <Text style={styles.botaoTexto}>Excluir Equipe</Text>
-          </TouchableOpacity>
         </>
       )}
-
       <TouchableOpacity
         style={styles.botaoAzul}
         onPress={() => navigation.navigate('JogadoresScreen', { equipeId })}
       >
-        <Text style={styles.botaoTexto}>Jogadores</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.botaoCinza} onPress={importarJogadores}>
-        <Text style={styles.botaoTexto}>Importar Jogadores via CSV</Text>
+        <Text style={styles.botaoTexto}> Cadastro de Jogadores</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.botaoVerde} onPress={salvarEquipe}>
         <Text style={styles.botaoTexto}>Salvar Equipe</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.botaoExcluir} onPress={excluirEquipe}>
+            <Text style={styles.botaoTexto}>Excluir Equipe</Text>
+          </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -209,11 +205,12 @@ export default function EquipeCadastro() {
 const styles = StyleSheet.create({
   container: { padding: 24, backgroundColor: '#fff', flexGrow: 1 },
   titulo: { fontSize: 22, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
-  escudo: { width: 80, height: 80, alignSelf: 'center', marginBottom: 12, borderRadius: 40 },
+  escudo: { width: 80, height: 80, alignSelf: 'center', marginBottom: 12, borderRadius: 10 },
   nomeEquipe: { fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 12 },
   input: {
     borderWidth: 1, borderColor: '#ccc', padding: 12, borderRadius: 8, marginBottom: 10,
   },
+
   imagemArea: {
     alignSelf: 'center',
     backgroundColor: '#eee',
@@ -223,29 +220,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
+    marginTop: -5,
   },
   imagemTexto: { color: '#666', textAlign: 'center' },
-  imagem: { width: 140, height: 140, borderRadius: 10 },
+  imagem: { width: 140, height: 140, borderRadius: 20 },
   botaoVerde: {
     backgroundColor: '#27ae60',
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 5,
   },
   botaoAzul: {
     backgroundColor: '#2980b9',
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: -5,
   },
+
+  
   botaoExcluir: {
     backgroundColor: '#c0392b',
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 5,
   },
   botaoCinza: {
     backgroundColor: '#7f8c8d',
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 10,
+    marginTop: -5,
   },
   botaoTexto: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });

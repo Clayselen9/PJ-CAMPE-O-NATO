@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native';
 
 interface Jogador {
   id: string;
@@ -341,7 +342,7 @@ export default function AndamentoJogoScreen() {
     const jogador = jogadores.find(j => j.id === item.jogadorId);
     if (!jogador) return null;
 
-    const tipoCartao = item.tipo === 'amarelo' ? 'Cartão Amarelo' : 'Cartão Vermelho';
+    const tipoCartao = item.tipo === 'amarelo' ? 'C.Amarelo' : 'C.Vermelho';
     const presente = jogo!.jogadoresPresenca?.includes(jogador.id);
 
     return (
@@ -386,7 +387,9 @@ export default function AndamentoJogoScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+    contentContainerStyle={styles.container}
+    keyboardShouldPersistTaps="handled">
       <Text style={styles.titulo}>Jogo: {jogo.timeA.nome} x {jogo.timeB.nome}</Text>
 
       <View style={{ marginBottom: 16 }}>
@@ -401,10 +404,17 @@ export default function AndamentoJogoScreen() {
 
       <View style={styles.placarContainer}>
   <View style={styles.placarLinha}>
-    <Text style={styles.sigla}>{jogo.timeA.nome.substring(0, 3).toUpperCase()}</Text>
-    <Text style={styles.placar}>{jogo.placarA} X {jogo.placarB}</Text>
-    <Text style={styles.sigla}>{jogo.timeB.nome.substring(0, 3).toUpperCase()}</Text>
-  </View>
+  <Text style={styles.sigla}>
+    {(jogo.timeA?.nome ?? '').substring(0, 3).toUpperCase()}
+  </Text>
+  <Text style={styles.placar}>
+    {(jogo.placarA ?? 0)} X {(jogo.placarB ?? 0)}
+  </Text>
+  <Text style={styles.sigla}>
+    {(jogo.timeB?.nome ?? '').substring(0, 3).toUpperCase()}
+  </Text>
+</View>
+
 </View>
 
       <Text style={styles.subtitulo}>Lista de Presença</Text>
@@ -425,26 +435,27 @@ export default function AndamentoJogoScreen() {
 
       <Text style={styles.subtitulo}>Gols</Text>
       {!jogo.gols?.length && <Text style={styles.semEventos}>Nenhum gol registrado</Text>}
-      <FlatList
-        data={(jogo.gols ?? []).slice(0, golsVisiveis)}
-        keyExtractor={(_, index) => 'gol-' + index}
-        renderItem={renderGol}
-        onEndReached={carregarMaisGols}
-        onEndReachedThreshold={0.5}
-        style={{ maxHeight: 250, marginBottom: 20 }}
-      />
+      <ScrollView contentContainerStyle={styles.container}>
+    {/* Lista de gols */}
+    <View style={{ maxHeight: 250, marginBottom: 20 }}>
+    {(jogo.gols ?? []).slice(0, golsVisiveis).map((gol, index) => (
+      <View key={`gol-${index}`}>
+        {renderGol({ item: gol, index })}
+      </View>
+    ))}
+    </View>
 
-      <Text style={styles.subtitulo}>Cartões</Text>
+    <Text style={styles.subtitulo}>Cartões</Text>
       {!jogo.cartoes?.length && <Text style={styles.semEventos}>Nenhum cartão registrado</Text>}
-      <FlatList
-        data={(jogo.cartoes ?? []).slice(0, cartoesVisiveis)}
-        keyExtractor={(_, index) => 'cartao-' + index}
-        renderItem={renderCartao}
-        onEndReached={carregarMaisCartoes}
-        onEndReachedThreshold={0.5}
-        style={{ maxHeight: 250, marginBottom: 20 }}
-      />
-
+       {/* Lista de cartões */}
+    <View style={{ maxHeight: 250, marginBottom: 20 }}>
+    {(jogo.cartoes ?? []).slice(0, cartoesVisiveis).map((cartao, index) => (
+      <View key={`cartao-${index}`}>
+        {renderCartao({ item: cartao, index })}
+      </View>
+    ))}
+    </View>
+    </ScrollView>
       <TouchableOpacity style={styles.botaoSalvar} onPress={salvarJogo}>
         <Text style={styles.textoBotao}>Salvar Jogo</Text>
       </TouchableOpacity>
@@ -452,12 +463,12 @@ export default function AndamentoJogoScreen() {
       <TouchableOpacity style={styles.botaoEncerrar} onPress={encerrarJogo}>
         <Text style={styles.textoBotao}>Encerrar Jogo</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  container: { padding: 16, backgroundColor: '#fff', flexGrow: 1 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   titulo: { fontSize: 22, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
   placarContainer: { alignItems: 'center', marginVertical: 12 },
@@ -517,13 +528,16 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 35,
+    marginTop: 15,
   },
   botaoEncerrar: {
     backgroundColor: '#c0392b',
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 35,
+    marginTop: -25,
   },
   textoBotao: {
     color: '#fff',
@@ -568,9 +582,9 @@ const styles = StyleSheet.create({
   numeroInput: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 4,
-    width: 40,
-    height: 28,
+    borderRadius: 1,
+    width: 30,
+    height: 40,
     textAlign: 'center',
     fontSize: 14,
   },

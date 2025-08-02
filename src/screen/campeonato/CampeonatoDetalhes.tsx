@@ -102,13 +102,6 @@ export default function CampeonatoDetalhes() {
           style={styles.botao}
           onPress={() => navigation.navigate(ROUTES.FASES, { campeonatoId })}
         >
-          <Text style={styles.botaoTexto}>Fases</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.botao}
-          onPress={() => navigation.navigate(ROUTES.JOGOS, { campeonatoId })}
-        >
           <Text style={styles.botaoTexto}>Jogos</Text>
         </TouchableOpacity>
 
@@ -121,7 +114,7 @@ export default function CampeonatoDetalhes() {
 
         {/* NOVO BOTÃO CONFIGURAÇÕES */}
         <TouchableOpacity
-          style={[styles.botao, { backgroundColor: '#8e44ad' }]}
+          style={[styles.botao, { backgroundColor: '#598404ff' }]}
           onPress={() => navigation.navigate(ROUTES.CONFIGURACOES, { campeonatoId })}
         >
           <Text style={styles.botaoTexto}>Configurações</Text>
@@ -145,8 +138,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   escudo: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     borderRadius: 8,
     marginBottom: 16,
   },
@@ -161,7 +154,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   botao: {
-    backgroundColor: '#1a91dfff',
+    backgroundColor: '#598404ff',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',

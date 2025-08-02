@@ -126,7 +126,7 @@ export default function HomeScreen() {
 
       <View style={styles.botoes}>
         <TouchableOpacity
-          style={[styles.botao, { backgroundColor: '#27ae60' }]}
+          style={[styles.botao, { backgroundColor: '#598404ff' }]}
           onPress={() => navigation.navigate(ROUTES.CAMPEONATO_CADASTRO)}
         >
           <Text style={styles.botaoTexto}>Novo Campeonato</Text>
